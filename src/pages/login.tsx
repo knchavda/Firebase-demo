@@ -78,7 +78,7 @@ const Login = () => {
       <Grid item xs={12} sm={5} md={4} lg={3}>
         <div className="login">
           <img src={Logo} alt="logo" className="signup-logo" />
-          <Typography variant="h5" component="h5" className="login-title">Login to your Account Kartik</Typography>
+          <Typography variant="h5" component="h5" className="login-title">Login to your Account</Typography>
           <div className="login-inputfields">
             <Input type="text" id="email" name="email" placeholder="Email" value={loginDetails.email} onChnage={LoginHandleChange} autoComplete="off" />
             <Input type={`${showPass ? "text" : "password"}`} id="password" name="password" placeholder="Password" value={loginDetails.password} onChnage={LoginHandleChange} endIcon={<button className="signup-inputfields-icon" onClick={() => setShowPass(!showPass)}>
