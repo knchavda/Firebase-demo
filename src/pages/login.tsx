@@ -76,6 +76,7 @@ const Login = () => {
         <img src={Welcome} alt="welcome" className={`${isSmallScreen ? "welcome-image-hide" : "welcome-image"}`} />
       </Grid>
       <Grid item xs={12} sm={5} md={4} lg={3}>
+        
         <div className="login">
           <img src={Logo} alt="logo" className="signup-logo" />
           <Typography variant="h5" component="h5" className="login-title">Login to your Account</Typography>
