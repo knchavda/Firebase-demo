@@ -1,0 +1,17 @@
+.splash {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $primary-color;
+  height: 100vh;
+
+  &-logo {
+    width: 338px;
+    height: 337px;
+  }
+
+  &-small-logo {
+    width: 267px;
+    height: 267px;
+  }
+}

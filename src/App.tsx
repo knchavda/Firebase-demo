@@ -1,25 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
-function App() {
+import Login from './pages/login';
+import Signup from './pages/signup';
+import SplashScreen from './pages/splash';
+
+const App = () => {
+  const navigate = useNavigate();
+  const [splashScreen, setSplashScreen] = useState<boolean>(true);
+
+  // const loggedIn = false;
+  // useEffect(() => {
+  //   if (!loggedIn) {
+  //     navigate("/login")
+  //   }
+  // }, [navigate]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setSplashScreen(false);
+    }, 1500);
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {splashScreen ?
+        <SplashScreen />
+        :
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={< Signup />} />
+        </Routes>
+      }
+    </>
   );
 }
 
