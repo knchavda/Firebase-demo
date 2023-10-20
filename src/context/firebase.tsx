@@ -40,7 +40,7 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
       const response = await signInWithPopup(auth, googleProvider);
       const idToken = await response.user.getIdToken();
       localStorage.setItem("token", idToken);
-      navigate('/home');
+      navigate('/');
     } catch (err) {
       console.error(err);
     }
