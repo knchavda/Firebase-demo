@@ -9,6 +9,8 @@ import App from './App';
 
 import './styles/index.scss';
 
+import { FirebaseProvider } from './context/firebase';
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,7 +19,9 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={customTheme}>
       <Router>
-        <App />
+        <FirebaseProvider>
+          <App />
+        </FirebaseProvider>
       </Router>
     </ThemeProvider>
   </React.StrictMode>

@@ -4,17 +4,12 @@ import { Routes, Route } from 'react-router-dom';
 import Login from './pages/login';
 import Signup from './pages/signup';
 import SplashScreen from './pages/splash';
+import Home from './pages/home';
+import ProtectedRoutes from './protectedRoutes';
 
 const App = () => {
-  // const navigate = useNavigate();
   const [splashScreen, setSplashScreen] = useState<boolean>(true);
-
-  // const loggedIn = false;
-  // useEffect(() => {
-  //   if (!loggedIn) {
-  //     navigate("/login")
-  //   }
-  // }, [navigate]);
+  const isLoggedIn = localStorage.getItem('token');
 
   useEffect(() => {
     setTimeout(() => {
@@ -29,7 +24,8 @@ const App = () => {
         :
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={< Signup />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/" element={<ProtectedRoutes isLoggedIn={isLoggedIn}><Home /></ProtectedRoutes>} />
         </Routes>
       }
     </>
