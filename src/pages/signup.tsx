@@ -1,6 +1,9 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import * as Yup from "yup";
+import { useFormik } from 'formik';
+
 import { FirebaseContext } from '../context/firebase';
 
 import { Grid, Typography } from '@mui/material';
@@ -18,8 +21,6 @@ import FacebookIcon from '../assests/svg/facebook.svg';
 import Logo from '../assests/images/logo.png';
 import Welcome from '../assests/images/welcome.jpeg';
 
-import { SignupDetails } from '../type/interface';
-
 const Signup = () => {
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -27,24 +28,33 @@ const Signup = () => {
 
   const [showPass, setShowPass] = useState<boolean>(false);
   const [showConfPass, setShowConfPass] = useState<boolean>(false);
-  const [signupDetails, setSignupDetails] = useState<SignupDetails>({
-    email: '',
-    password: '',
-    confirmPassword: ''
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email("Please enter a valid email").required("This field is required"),
+    password: Yup.string()
+      .required("This field is required")
+      .min(8, "Pasword must be 8 or more characters")
+      .matches(/(?=.*[a-z])(?=.*[A-Z])\w+/, "Password ahould contain at least one uppercase and lowercase character")
+      .matches(/\d/, "Password should contain at least one number")
+      .matches(/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/, "Password should contain at least one special character"),
+    confirmPassword: Yup.string().when("password", (password: any, field: any) => {
+      if (password) {
+        return field.required("The passwords do not match").oneOf([Yup.ref("password")], "The passwords do not match");
+      }
+    }),
   });
 
-  const SignupHandleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const { name, value } = e.target as HTMLButtonElement
-    setSignupDetails({
-      ...signupDetails,
-      [name]: value
-    })
-  };
-
-  const Signup = async () => {
-    const { email, password } = signupDetails;
-    firebase.Signup(email, password)
-  }
+  const formik = useFormik({ 
+    initialValues: {
+      email: '',
+      password: '',
+      confirmPassword: ''
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      await firebase.Signup(values.email, values.password);
+    }, 
+  }); 
 
   const SignupWithGoogle = async () => await firebase.SignInWithGoogle();
 
@@ -62,14 +72,14 @@ const Signup = () => {
             <Typography variant="h5" component="h5" className="signup-title">Create your Account</Typography>
 
             <div className="signup-inputfields">
-              <Input type="text" id="email" name="email" placeholder="Email" value={signupDetails.email} onChnage={SignupHandleChange} autoComplete="off" />
-              <Input type={`${showPass ? "text" : "password"}`} id="password" name="password" placeholder="Password" value={signupDetails.password} onChnage={SignupHandleChange} endIcon={<button className="signup-inputfields-icon" onClick={() => setShowPass(!showPass)}>
+              <Input type="text" id="email" name="email" placeholder="Email" autoComplete="off" formik={formik}/>
+              <Input type={`${showPass ? "text" : "password"}`} id="password" name="password" placeholder="Password" formik={formik} endIcon={<button className="signup-inputfields-icon" onClick={() => setShowPass(!showPass)}>
                 {showPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
               </button>} autoComplete="off" />
-              <Input type={`${showConfPass ? "text" : "password"}`} id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" value={signupDetails.confirmPassword} onChnage={SignupHandleChange} endIcon={<button className="signup-inputfields-icon" onClick={() => setShowConfPass(!showConfPass)}>{showConfPass ? <VisibilityIcon /> : <VisibilityOffIcon />}</button>} autoComplete="off" />
+              <Input type={`${showConfPass ? "text" : "password"}`} id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" formik={formik} endIcon={<button className="signup-inputfields-icon" onClick={() => setShowConfPass(!showConfPass)}>{showConfPass ? <VisibilityIcon /> : <VisibilityOffIcon />}</button>} autoComplete="off" />
             </div>
 
-            <ContainedButton label="Sign Up" className="signup-btn" onClick={Signup} />
+            <ContainedButton label="Sign Up" className="signup-btn" onClick={() => formik.handleSubmit()} />
             <div className="signup-border"></div>
 
             <div>

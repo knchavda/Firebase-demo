@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { useState, createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
@@ -11,7 +11,8 @@ export type FirebaseProviderProps = {
 }
 
 export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
-  const navigate = useNavigate();
+  const navigate =  useNavigate();
+  const [isError, setIsError] = useState<string>('');
 
   const Login = async (email: string, password: string) => {
     try {
@@ -19,8 +20,11 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
       const idToken = await response.user.getIdToken();
       localStorage.setItem("token", idToken);
       navigate('/');
+      setIsError('');
     } catch (error) {
-      console.log(error);
+      if(error) {
+        setIsError('Invalid credentials');
+      }
     }
   }
 
@@ -30,6 +34,7 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
       const idToken = await response.user.getIdToken();
       localStorage.setItem("token", idToken);
       navigate('/');
+      setIsError('')
     } catch (error) {
       console.log(error);
     }
@@ -40,13 +45,14 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
       const response = await signInWithPopup(auth, googleProvider);
       const idToken = await response.user.getIdToken();
       localStorage.setItem("token", idToken);
+      setIsError('');
       navigate('/');
     } catch (err) {
       console.error(err);
     }
   };
   
-  return <FirebaseContext.Provider value={{ Login, Signup, SignInWithGoogle }}>{children}</FirebaseContext.Provider>;
+  return <FirebaseContext.Provider value={{ Login, Signup, SignInWithGoogle, isError, setIsError }}>{children}</FirebaseContext.Provider>;
 
 }
 

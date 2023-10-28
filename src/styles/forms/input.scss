@@ -1,3 +1,9 @@
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .main-input {
   border-radius: 10px;
   background-color: #e4e4e4;
@@ -5,7 +11,21 @@
   padding: 16px;
   display: flex;
   justify-content: space-between;
+  max-height: 50px;
   align-items: center;
+}
+
+.error-border {
+  border: 2px solid #f52622;
+}
+.error-text {
+  margin: 0;
+  text-align: left;
+  padding-left: 4px;
+  color: #f52622;
+  font-size: 14px !important;
+  line-height: 20px;
+  font-weight: 600 !important;
 }
 
 input {
