@@ -24,6 +24,7 @@ const App = () => {
     } else {
       navigate('/login')
     }
+    // eslint-disable-next-line 
   }, [token]);
 
   return (
